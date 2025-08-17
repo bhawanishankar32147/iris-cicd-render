@@ -1,0 +1,53 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iris Classifier</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Iris Flower Classifier</h1>
+    <div class="container">
+        <form id="prediction-form">
+            <label for="sepal_length">Sepal Length (cm):</label>
+            <input type="number" step="0.1" id="sepal_length" required>
+            <label for="sepal_width">Sepal Width (cm):</label>
+            <input type="number" step="0.1" id="sepal_width" required>
+            <label for="petal_length">Petal Length (cm):</label>
+            <input type="number" step="0.1" id="petal_length" required>
+            <label for="petal_width">Petal Width (cm):</label>
+            <input type="number" step="0.1" id="petal_width" required>
+            <button type="submit">Predict</button>
+        </form>
+        <div id="result"></div>
+    </div>
+    <script>
+        document.getElementById("prediction-form").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const sepalLength = parseFloat(document.getElementById("sepal_length").value);
+            const sepalWidth = parseFloat(document.getElementById("sepal_width").value);
+            const petalLength = parseFloat(document.getElementById("petal_length").value);
+            const petalWidth = parseFloat(document.getElementById("petal_width").value);
+            const features = [sepalLength, sepalWidth, petalLength, petalWidth];
+
+            try {
+                const response = await fetch("/predict", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ features })
+                });
+                const data = await response.json();
+                if (data.error) {
+                    document.getElementById("result").innerHTML = `<p style="color: red;">Error: ${data.error}</p>`;
+                } else {
+                    document.getElementById("result").innerHTML = `<p>Predicted Iris Species: <strong>${data.prediction}</strong></p>`;
+                }
+            } catch (error) {
+                document.getElementById("result").innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;
+            }
+        });
+    </script>
+</body>
+</html>

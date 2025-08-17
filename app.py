@@ -1,5 +1,5 @@
 # app.py
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 import joblib
 import numpy as np
 
@@ -11,7 +11,8 @@ app = Flask(__name__)
 
 @app.route("/")
 def home():
-    return "Iris Classifier API is Running!"
+    return render_template("index.html")
+    # return "Iris Classifier API is Running!"
 
 @app.route("/predict", methods=["POST"])
 def predict():
