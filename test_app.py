@@ -10,8 +10,11 @@ def client():
 
 def test_home_endpoint(client):
     response = client.get("/")
+    # assert response.status_code == 200
+    # assert b"Iris Classifier API is Running!" in response.data
+    response = client.get("/")
     assert response.status_code == 200
-    assert b"Iris Classifier API is Running!" in response.data
+    assert b"Iris Flower Classifier" in response.data
 
 def test_predict_endpoint_valid_input(client):
     response = client.post(
